@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SplinterGame : MonoBehaviour
 {
-    private enum Screen
+    private enum GameScreen
     {
         Opening,
         ChapterBrief,
@@ -74,13 +74,12 @@ public class SplinterGame : MonoBehaviour
         }
     };
 
-    private Screen screen = Screen.Opening;
+    private GameScreen screen = GameScreen.Opening;
     private int chapterIndex;
     private int bossStage;
     private float holdProgress;
     private bool holdComplete;
     private float worldTime;
-    private string message = "";
     private bool wrongAnswer;
     private bool firstRun = true;
 
@@ -176,7 +175,7 @@ public class SplinterGame : MonoBehaviour
 
     private Color CurrentAccent()
     {
-        return screen == Screen.Complete && chapterIndex >= Chapters.Length
+        return screen == GameScreen.Complete && chapterIndex >= Chapters.Length
             ? new Color(0.92f, 0.57f, 0.42f)
             : chapterIndex < Chapters.Length ? Chapters[Mathf.Clamp(chapterIndex, 0, Chapters.Length - 1)].Accent : Color.white;
     }
@@ -185,7 +184,7 @@ public class SplinterGame : MonoBehaviour
     {
         worldTime += Time.unscaledDeltaTime;
 
-        if (screen == Screen.Puzzle && chapterIndex == 2)
+        if (screen == GameScreen.Puzzle && chapterIndex == 2)
         {
             var anchor = Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.UpArrow);
             if (anchor)
@@ -203,7 +202,7 @@ public class SplinterGame : MonoBehaviour
             }
         }
 
-        if (chapterIndex == 2 && screen == Screen.Puzzle && holdComplete)
+        if (chapterIndex == 2 && screen == GameScreen.Puzzle && holdComplete)
         {
             var sway = Camera.main;
             if (sway != null) sway.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(worldTime * 0.8f) * 0.3f);
@@ -223,22 +222,22 @@ public class SplinterGame : MonoBehaviour
 
         switch (screen)
         {
-            case Screen.Opening:
+            case GameScreen.Opening:
                 DrawOpening(panel);
                 break;
-            case Screen.ChapterBrief:
+            case GameScreen.ChapterBrief:
                 DrawChapterBrief(panel);
                 break;
-            case Screen.Puzzle:
+            case GameScreen.Puzzle:
                 DrawPuzzle(panel);
                 break;
-            case Screen.Meeting:
+            case GameScreen.Meeting:
                 DrawMeeting(panel);
                 break;
-            case Screen.Complete:
+            case GameScreen.Complete:
                 DrawComplete(panel);
                 break;
-            case Screen.Credits:
+            case GameScreen.Credits:
                 DrawCredits(panel);
                 break;
         }
@@ -278,7 +277,7 @@ public class SplinterGame : MonoBehaviour
         if (GUI.Button(new Rect(contentX, panel.y + 310, 220, 48),
             firstRun ? "ENTER THE WORKSHOP" : "CONTINUE", buttonStyle))
         {
-            screen = Screen.ChapterBrief;
+            screen = GameScreen.ChapterBrief;
         }
 
         GUI.Label(new Rect(contentX, panel.y + 375, panel.width - 350, 80),
@@ -324,7 +323,7 @@ public class SplinterGame : MonoBehaviour
             wrongAnswer = false;
             holdProgress = 0f;
             holdComplete = false;
-            screen = Screen.Puzzle;
+            screen = GameScreen.Puzzle;
         }
     }
 
@@ -343,7 +342,7 @@ public class SplinterGame : MonoBehaviour
         {
             bossStage = 0;
             wrongAnswer = false;
-            screen = Screen.Puzzle;
+            screen = GameScreen.Puzzle;
         }
     }
 
@@ -551,7 +550,7 @@ public class SplinterGame : MonoBehaviour
                 {
                     bossStage++;
                     wrongAnswer = false;
-                    if (bossStage >= 3) screen = Screen.Meeting;
+                    if (bossStage >= 3) screen = GameScreen.Meeting;
                 }
                 else
                 {
@@ -571,7 +570,7 @@ public class SplinterGame : MonoBehaviour
     private void FinishPuzzle()
     {
         wrongAnswer = false;
-        screen = Screen.Meeting;
+        screen = GameScreen.Meeting;
     }
 
     private void DrawMeeting(Rect panel)
@@ -589,7 +588,7 @@ public class SplinterGame : MonoBehaviour
             if (GUI.Button(new Rect(panel.x + 50, panel.y + 310, 210, 48),
                 "BECOME HUMAN", buttonStyle))
             {
-                screen = Screen.Complete;
+                screen = GameScreen.Complete;
             }
             return;
         }
@@ -611,11 +610,11 @@ public class SplinterGame : MonoBehaviour
             firstRun = false;
             if (chapterIndex >= Chapters.Length)
             {
-                screen = Screen.ChapterBrief;
+                screen = GameScreen.ChapterBrief;
             }
             else
             {
-                screen = Screen.ChapterBrief;
+                screen = GameScreen.ChapterBrief;
             }
         }
     }
@@ -638,7 +637,7 @@ public class SplinterGame : MonoBehaviour
         if (GUI.Button(new Rect(panel.x + 310, panel.y + 320, 210, 48),
             "CONTINUE", buttonStyle))
         {
-            screen = Screen.Credits;
+            screen = GameScreen.Credits;
         }
     }
 
@@ -660,7 +659,7 @@ public class SplinterGame : MonoBehaviour
         {
             chapterIndex = 0;
             bossStage = 0;
-            screen = Screen.Opening;
+            screen = GameScreen.Opening;
         }
     }
 }
