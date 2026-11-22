@@ -202,10 +202,15 @@ public class SplinterGame : MonoBehaviour
             }
         }
 
+        var sway = Camera.main;
         if (chapterIndex == 2 && screen == GameScreen.Puzzle && holdComplete)
         {
-            var sway = Camera.main;
-            if (sway != null) sway.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(worldTime * 0.8f) * 0.3f);
+            if (sway != null)
+                sway.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(worldTime * 0.8f) * 0.3f);
+        }
+        else if (sway != null && sway.transform.localRotation != Quaternion.identity)
+        {
+            sway.transform.localRotation = Quaternion.identity;
         }
     }
 
