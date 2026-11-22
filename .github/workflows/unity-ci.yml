@@ -1,0 +1,16 @@
+name: Unity validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect project structure
+        run: |
+          test -f Packages/manifest.json
+          test -f Assets/Scripts/SplinterGame.cs
+          grep -R "Lantern Market" -n Assets/Scripts
