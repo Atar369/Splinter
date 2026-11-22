@@ -11,9 +11,6 @@ public static class SplinterSceneGenerator
     {
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-        var root = new GameObject("Splinter Bootstrap");
-        root.AddComponent<SplinterGame>();
-
         var cameraObject = new GameObject("Main Camera");
         cameraObject.tag = "MainCamera";
         var camera = cameraObject.AddComponent<Camera>();
