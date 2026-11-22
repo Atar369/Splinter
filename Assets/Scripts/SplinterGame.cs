@@ -211,8 +211,9 @@ public class SplinterGame : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), pixel, ScaleMode.StretchToFill, false,
-            new Color(0.035f, 0.045f, 0.065f));
+        GUI.color = new Color(0.035f, 0.045f, 0.065f);
+        GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), pixel, ScaleMode.StretchToFill, false);
+        GUI.color = Color.white;
 
         DrawBackground();
 
