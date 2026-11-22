@@ -93,16 +93,30 @@ public class SplinterGame : MonoBehaviour
     private Texture2D panelTexture;
     private Texture2D accentTexture;
     private Texture2D dollTexture;
+    private static SplinterGame instance;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void CreateGame()
     {
+        if (FindObjectOfType<SplinterGame>() != null)
+        {
+            return;
+        }
+
         var root = new GameObject("Splinter");
         root.AddComponent<SplinterGame>();
     }
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+
         if (Camera.main == null)
         {
             var cameraObject = new GameObject("Main Camera");
@@ -118,8 +132,29 @@ public class SplinterGame : MonoBehaviour
         panelTexture = MakeTexture(1, 1, new Color(0.075f, 0.09f, 0.12f, 0.96f));
         accentTexture = MakeTexture(1, 1, Chapters[0].Accent);
         dollTexture = MakeTexture(1, 1, new Color(0.82f, 0.72f, 0.55f));
+    }
 
-        BuildStyles();
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+
+        DestroyCreatedTextures();
+    }
+
+    private void DestroyCreatedTextures()
+    {
+        if (pixel != null) Destroy(pixel);
+        if (panelTexture != null) Destroy(panelTexture);
+        if (accentTexture != null) Destroy(accentTexture);
+        if (dollTexture != null) Destroy(dollTexture);
+
+        pixel = null;
+        panelTexture = null;
+        accentTexture = null;
+        dollTexture = null;
     }
 
     private void BuildStyles()
@@ -207,10 +242,23 @@ public class SplinterGame : MonoBehaviour
             var sway = Camera.main;
             if (sway != null) sway.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(worldTime * 0.8f) * 0.3f);
         }
+        else if (holdComplete)
+        {
+            var camera = Camera.main;
+            if (camera != null)
+            {
+                camera.transform.localRotation = Quaternion.identity;
+            }
+        }
     }
 
     private void OnGUI()
     {
+        if (titleStyle == null)
+        {
+            BuildStyles();
+        }
+
         GUI.color = new Color(0.035f, 0.045f, 0.065f);
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), pixel, ScaleMode.StretchToFill, false);
         GUI.color = Color.white;
@@ -660,6 +708,7 @@ public class SplinterGame : MonoBehaviour
         {
             chapterIndex = 0;
             bossStage = 0;
+            firstRun = true;
             screen = GameScreen.Opening;
         }
     }
